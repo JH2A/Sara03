@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>うさぎ育成ゲーム</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #fef4e6;
+      margin: 0;
+      padding: 0;
+    }
+    #game {
+      margin: 50px auto;
+      width: 300px;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    #rabbit img {
+      transition: transform 0.3s ease;
+    }
+    button {
+      margin: 10px;
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #4caf50;
+      color: white;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #stats {
+      margin-top: 20px;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <h1>うさぎ育成ゲーム</h1>
+  <div id="game">
+    <div id="rabbit">
+      <img src="/mnt/data/A_cute_cartoon-style_rabbit_sitting_and_smiling_in.png" alt="うさぎ" id="rabbitImage" width="150">
+      <p id="message">こんにちは！</p>
+    </div>
+    <div id="stats">
+      <p>満腹度: <span id="hunger">50</span>/100</p>
+      <p>元気度: <span id="health">50</span>/100</p>
+    </div>
+    <div id="actions">
+      <button id="feedButton">にんじんをあげる</button>
+      <button id="playButton">遊ぶ</button>
+    </div>
+  </div>
+  <script>
+    // 初期ステータス
+    let hunger = 50; // 満腹度
+    let health = 50; // 元気度
+    let rabbitSize = 1; // うさぎのサイズ
+
+    // DOM要素を取得
+    const hungerDisplay = document.getElementById("hunger");
+    const healthDisplay = document.getElementById("health");
+    const message = document.getElementById("message");
+    const rabbitImage = document.getElementById("rabbitImage");
+
+    const feedButton = document.getElementById("feedButton");
+    const playButton = document.getElementById("playButton");
+
+    // にんじんをあげるボタンの処理
+    feedButton.addEventListener("click", () => {
+      hunger = Math.min(hunger + 10, 100); // 最大値は100
+      health = Math.max(health - 5, 0); // 元気度が少し減少
+      rabbitSize += 0.1; // サイズを大きくする
+      updateStatus("おいしい！ありがとう！");
+      updateRabbitSize();
+      setTimeout(() => resetImage(), 2000); // 2秒後に元に戻す
+    });
+
+    // 遊ぶボタンの処理
+    playButton.addEventListener("click", () => {
+      health = Math.min(health + 10, 100); // 最大値は100
+      hunger = Math.max(hunger - 5, 0); // 満腹度が少し減少
+      updateStatus("楽しいね！");
+      setTimeout(() => resetImage(), 2000); // 2秒後に元に戻す
+    });
+
+    // 状態更新
+    function updateStatus(newMessage) {
+      hungerDisplay.textContent = hunger;
+      healthDisplay.textContent = health;
+      message.textContent = newMessage;
+
+      // 満腹度または元気度が0の場合の処理
+      if (hunger === 0 || health === 0) {
+        message.textContent = "うさぎが元気をなくした...";
+      }
+    }
+
+    // うさぎのサイズを更新
+    function updateRabbitSize() {
+      rabbitImage.style.transform = `scale(${rabbitSize})`;
+    }
+
+    // 元の画像に戻す
+    function resetImage() {
+      rabbitImage.src = "/mnt/data/A_cute_cartoon-style_rabbit_sitting_and_smiling_in.png";
+    }
+
+    // 自動で満腹度と元気度を減少させる
+    setInterval(() => {
+      hunger = Math.max(hunger - 1, 0);
+      health = Math.max(health - 1, 0);
+      updateStatus("...");
+    }, 5000); // 5秒ごと
+  </script>
+</body>
+</html>
